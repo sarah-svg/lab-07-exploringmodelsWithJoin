@@ -27,6 +27,18 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "pg": "^8.5.1"
-  }
+    "pg": "^8.5.1",
+    "supertest": "^6.0.1"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sarah-svg/lab-07-exploringmodelsWithJoin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sarah-svg/lab-07-exploringmodelsWithJoin/issues"
+  },
+  "homepage": "https://github.com/sarah-svg/lab-07-exploringmodelsWithJoin#readme"
 }

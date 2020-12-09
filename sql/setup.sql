@@ -1,15 +1,12 @@
-      id: 1,
-      temperature: 'hot',
-      weather: 'sunny',
-      waterLevel: 'water twice a week'
+
 
 DROP TABLE IF EXISTS flowers CASCADE;
-DROP TABLE IF EXISTS weathers;
+DROP TABLE IF EXISTS weather;
 
 CREATE TABLE flowers (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     temperature TEXT NOT NULL,
-    water_level TEXT NOT NULL,
+    water TEXT NOT NULL,
     weather TEXT NOT NULL
 
 );

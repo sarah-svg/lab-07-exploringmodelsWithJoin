@@ -3,8 +3,7 @@ const fs = require('fs');
 const request = require('supertest');
 
 const app = require('../lib/app');
-
-const pool = require('../lib/util/pool');
+const pool = require('../lib/utils/pool');
 
 
 describe('app endpoints are correct', () => {
@@ -22,17 +21,17 @@ describe('app endpoints are correct', () => {
       .send({
         temperature: 'hot',
         weather: 'sunny',
-        waterLevel: 'water twice a week'
+        water: 'water twice a week'
       });
 
     expect(res.body).toEqual({
-      id: 1,
+      id: '1',
       temperature: 'hot',
       weather: 'sunny',
-      waterLevel: 'water twice a week'
+      water: 'water twice a week'
     });
   });
-////////////////////////
+  ////////////////////////
 
 
     

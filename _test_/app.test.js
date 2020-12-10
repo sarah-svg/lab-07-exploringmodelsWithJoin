@@ -61,14 +61,34 @@ describe('app endpoints are correct', () => {
     expect(res.body).toEqual(expect.arrayContaining(flower));
     expect(res.body).toHaveLength(flower.length);
   });
+  it('updates a flower via PUT', async() => {
+    const flower = await Flower.insert({
+      temperature: 'hot',
+      weather: 'cloudy',
+      water: 'water twice a week'
+    });
+
+    const res = await request(app)
+      .put(`/api/v1/flower/${flower.id}`)
+      .send({
+        temperature: 'hot',
+        weather: 'sunny',
+        water: 'water twice a week'
+      });
+
+    expect(res.body).toEqual({
+      id: '1',
+      temperature: 'hot',
+      weather: 'sunny',
+      water: 'water twice a week'
+    });
+  });
 
 
 
 
+});
 
-
-}
-);
 
 
 

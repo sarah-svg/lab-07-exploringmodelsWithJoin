@@ -17,18 +17,7 @@ describe('app endpoints are correct', () => {
     return pool.query(fs.readFileSync(`${__dirname}/../sql/setup.sql`, 'utf-8'));
 
   });
-  // let weather;
-  // beforeEach(async() => {
 
-  //   await pool.query(fs.readFileSync(`${__dirname}/../data/setup.sql`, 'utf-8'));
-  //   weather = await Flower.insert({
-  //     temperature: 'hot',
-  //     weather: 'warm',
-
-  //     water: 'water daily' 
-
-  //   });
-  // });
   afterAll(() => {
     return pool.end();
   });
@@ -101,42 +90,7 @@ describe('app endpoints are correct', () => {
     expect(res.body).toEqual(weather);
   });
 
-  // it('adds a new weather', async() => {
 
-  //   const weather = await Flower.insert({
-  //     temperature: 'hot',
-  //     weather: 'sunny',
-  //     water: 'water twice a week'
-  //   });
-
-  //   const res = await request(app).post('/api/v1/weather').send({
-  //     daily: 80,
-  //     weather_id: 'sunny'
-  //   });
-
-  //   expect(res.body).toEqual({
-
-  //   });
-  // });
-
-  // it('finds all weather via GET', async() => {
-  //   const weather = await Promise.all([
-  //     {
-  //       daily: 80,
-  //       weather_id: 1,
-  //     },
-  //     {
-  //       daily: 80,
-
-  //       weather_id: '1'
-  //     },
-  //   ].map(weather => Flower.insert(weather)));
-  //   const res = await request(app)
-  //     .get('/api/v1/weather');
-
-  //   expect(res.body).toEqual(expect.arrayContaining(weather));
-  //   expect(res.body).toHaveLength(weather.length);
-  // });
 
   it('finds a weather by id via GET', async() => {
     const weather = await Weather.insert({

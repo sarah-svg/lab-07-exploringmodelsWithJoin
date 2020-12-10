@@ -5,6 +5,7 @@ const request = require('supertest');
 const app = require('../lib/app');
 const pool = require('../lib/utils/pool');
 
+const Flower = require('../lib/model/Flower');
 
 describe('app endpoints are correct', () => {
   beforeEach(() => {
@@ -32,10 +33,20 @@ describe('app endpoints are correct', () => {
     });
   });
   ////////////////////////
+  it('finds a flower by id via GET', async() => {
+    const flower = await Flower.insert({ temperature: 'hot', weather: 'dry', water: 'everyday' });
+
+    const response = await request(app)
+      .get(`/api/v1/flower/${flower.id}`);
+
+    expect(response.body).toEqual(flower);
+  });
+
+});
 
 
     
-});
+
 
 
 

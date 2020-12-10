@@ -13,6 +13,7 @@ CREATE TABLE flowers (
 
 CREATE TABLE weather (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    weather_daily INTEGER NOT NULL,
-    weather_id BIGINT REFERENCES flowers(id)
+    daily INTEGER NOT NULL,
+    weather_id TEXT NOT NULL
+    
 );

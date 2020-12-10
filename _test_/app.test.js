@@ -42,7 +42,34 @@ describe('app endpoints are correct', () => {
     expect(response.body).toEqual(flower);
   });
 
-});
+  it('finds all flowers via GET', async() => {
+    const flower = await Promise.all([
+      {
+        temperature: 'hot',
+        weather: 'sunny',
+        water: 'water twice a week'
+      },
+      {
+        temperature: 'hot',
+        weather: 'sunny',
+        water: 'water twice a week'
+      },
+    ].map(flower => Flower.insert(flower)));
+    const res = await request(app)
+      .get('/api/v1/flower');
+
+    expect(res.body).toEqual(expect.arrayContaining(flower));
+    expect(res.body).toHaveLength(flower.length);
+  });
+
+
+
+
+
+
+}
+);
+
 
 
     

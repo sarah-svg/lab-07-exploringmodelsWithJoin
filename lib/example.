@@ -1,0 +1,87 @@
+const pool = require('../utils/pool');
+const Toy = require('./Toys');
+
+module.exports = class Child {
+  id;
+  name;
+  age;
+
+  constructor(row) {
+    this.id = row.id;
+    this.name = row.name;
+    this.age = row.age;
+  }
+
+  static async insert({ name, age }) {
+    const results = await pool.query(
+      'INSERT INTO children (name, age) VALUES ($1, $2) RETURNING *',
+      [name, age]
+    );
+
+    return new Child(results.rows[0]);
+  }
+
+  // static async findById(id) {
+  //   const { rows } = await pool.query(
+  //     'SELECT * FROM children WHERE id=$1',
+  //     [id]
+  //   );
+
+  //   if(!rows[0]) throw Error(`No child with id ${id} found.`);
+
+  //   return new Child(rows[0]);
+  // }
+
+  static async findById(id) {
+    const { rows } = await pool.query(
+      `
+      SELECT
+        children.*,
+        array_to_json(array_agg(toys.*)) AS toys
+      FROM
+        children
+      JOIN toys
+      ON children.id = toys.child_id
+      WHERE children.id=$1
+      GROUP BY children.id
+      `,
+      [id]
+    );
+
+    if(!rows[0]) throw Error(`No child with id ${id} found.`);
+
+    return {
+      ...new Child(rows[0]),
+      toys: rows[0].toys.map(toy => new Toy(toy))
+    };
+  }
+
+  static async find() {
+    const { rows } = await pool.query('SELECT * FROM children');
+
+    return rows.map(row => new Child(row));
+  }
+
+  static async update(id, { name, age }) {
+    const { rows } = await pool.query(
+      `UPDATE children
+        SET name=$1,
+            age=$2
+        WHERE id=$3
+        RETURNING *`,
+      [name, age, id]
+    );
+    if(!rows[0]) throw Error(`No child with id ${id} found.`);
+
+    return new Child(rows[0]);
+  }
+
+  static async delete(id) {
+    const { rows } = await pool.query(
+      'DELETE FROM children WHERE id=$1 RETURNING *',
+      [id]
+    );
+
+    return new Child(rows[0]);
+  }
+};

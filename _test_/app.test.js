@@ -9,22 +9,22 @@ const Flower = require('../lib/model/Flower');
 const Weather = require('../lib/model/Weather');
 
 describe('app endpoints are correct', () => {
-  beforeEach(() => {
-    return pool.query(fs.readFileSync(`${__dirname}/../sql/setup.sql`, 'utf-8'));
+  // beforeEach(() => {
+  //   return pool.query(fs.readFileSync(`${__dirname}/../sql/setup.sql`, 'utf-8'));
 
-  });
-  // let flower;
-  // beforeEach(async() => {
-
-  //   await pool.query(fs.readFileSync(`${__dirname}/../data/setup.sql`, 'utf-8'));
-  //   flower = await Flower.insert({
-  //     temperature: 'hot',
-  //     weather: 'warm',
-
-  //     water: 'water daily' 
-   
-  //   });
   // });
+  // let flower;
+  beforeEach(async() => {
+
+    await pool.query(fs.readFileSync(`${__dirname}/../sql/setup.sql`, 'utf-8'));
+    await Flower.insert({
+      temperature: 'hot',
+      weather: 'warm',
+
+      water: 'water daily' 
+   
+    });
+  });
   afterAll(() => {
     return pool.end();
   });
@@ -39,40 +39,61 @@ describe('app endpoints are correct', () => {
       });
 
     expect(res.body).toEqual({
-      id: '1',
+      id: '2',
       temperature: 'hot',
       weather: 'sunny',
       water: 'water twice a week'
     });
   });
   ////////////////////////
+  // it('finds a flower by id via GET', async() => {
+  //   const flower = await Flower.insert({ temperature: 'hot',
+  //     weather: 'dry', water: 'everyday' });
+
+  //   const response = await request(app)
+  //     .get(`/api/v1/flower/${flower.id}`);
+
+  //   expect(response.text).toEqual(flower);
+  // });
   it('finds a flower by id via GET', async() => {
-    const flower = await Flower.insert({ temperature: 'hot', weather: 'dry', water: 'everyday' });
+
+    // const flower = await Flower.insert({ temperature: 'hot',
+    //   weather: 'dry', water: 'everyday' });
+    
+
+
+    const weather = await Promise.all([
+      {
+        daily: 1,
+        weather_id: flower.id
+
+      },
+      {
+        daily: 1,
+        weather_id: flower.id 
+      },
+      {
+        daily: 1,
+        weather_id: flower.id
+      },
+    ].map(weather => Weather.insert(weather)));  
 
     const response = await request(app)
       .get(`/api/v1/flower/${flower.id}`);
 
-    expect(response.body).toEqual(flower);
+    expect(response.text).toEqual( ...flower, weather: expect.arrayContaining(weather)
   });
 
+
+  
+
   it('finds all flowers via GET', async() => {
-    const flower = await Promise.all([
-      {
-        temperature: 'hot',
-        weather: 'sunny',
-        water: 'water twice a week'
-      },
-      {
-        temperature: 'hot',
-        weather: 'sunny',
-        water: 'water twice a week'
-      },
-    ].map(flower => Flower.insert(flower)));
+    const flower = await Promise.all([{ 'id': '1', 'temperature': 'hot', 'water': 'water daily', 'weather': 'warm' }, { 'id': '2', 'temperature': 'hot', 'water': 'water twice a week', 'weather': 'sunny' }, { 'id': '3', 'temperature': 'hot', 'water': 'water twice a week', 'weather': 'sunny' }].map(flower => Flower.insert(flower)));
     const res = await request(app)
       .get('/api/v1/flower');
 
     expect(res.body).toEqual(expect.arrayContaining(flower));
-    expect(res.body).toHaveLength(flower.length);
+    // expect(res.body).toHaveLength(flower.length);
   });
   it('updates a flower via PUT', async() => {
     const flower = await Flower.insert({
@@ -90,7 +111,7 @@ describe('app endpoints are correct', () => {
       });
 
     expect(res.body).toEqual({
-      id: '1',
+      id: '2',
       temperature: 'hot',
       weather: 'sunny',
       water: 'water twice a week'
@@ -115,3 +136,7 @@ describe('app endpoints are correct', () => {
 });
 
 
+// beforeEach (() => {      
+
+//   return pool.query(fs.readFileSync('./sql/setup.sql', 'utf-8'));
+// });
